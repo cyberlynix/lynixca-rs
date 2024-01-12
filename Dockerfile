@@ -1,6 +1,6 @@
 FROM rust:1.75.0-bullseye as builder
 
-RUN cargo install cargo-leptos -y
+RUN cargo install cargo-leptos
 
 # Add WASM target for build
 RUN rustup target add wasm32-unknown-unknown
