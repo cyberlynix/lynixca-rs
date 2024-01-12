@@ -28,6 +28,24 @@ async fn main() {
 
     // run our app with hyper
     // `axum::Server` is a re-export of `hyper::Server`
+
+    // LYNIX.CA
+    let multiline_log = format!(
+        r#"Welcome to lynixca-rs (Codename: awoo)!
+         _                 _       _____               _____   _____                              
+        | |               (_)     / ____|   /\        |  __ \ / ____|     /\                      
+        | |    _   _ _ __  ___  _| |       /  \ ______| |__) | (___      /  \__      _____   ___  
+        | |   | | | | '_ \| \ \/ / |      / /\ \______|  _  / \___ \    / /\ \ \ /\ / / _ \ / _ \ 
+        | |___| |_| | | | | |>  <| |____ / ____ \     | | \ \ ____) |  / ____ \ V  V / (_) | (_) |
+        |______\__, |_| |_|_/_/\_\\_____/_/    \_\    |_|  \_\_____/  /_/    \_\_/\_/ \___/ \___/ 
+                __/ |                                                                             
+               |___/                                                                              
+               
+        Created by: Lynix | Version: 0.0.1 Awoo | Built with Rust"#
+    );
+
+    log::info!("{}", multiline_log);
+
     log::info!("listening on http://{}", &addr);
     axum::Server::bind(&addr)
         .serve(app.into_make_service())

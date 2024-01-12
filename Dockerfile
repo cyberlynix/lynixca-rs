@@ -1,15 +1,8 @@
-FROM rust:1.74-bullseye as builder
+FROM rust:1.75.0-bullseye as builder
 
-# Install cargo-binstall, which makes it easier to install other
-# cargo extensions like cargo-leptos
-RUN wget https://github.com/cargo-bins/cargo-binstall/releases/latest/download/cargo-binstall-x86_64-unknown-linux-musl.tgz
-RUN tar -xvf cargo-binstall-x86_64-unknown-linux-musl.tgz
-RUN cp cargo-binstall /usr/local/cargo/bin
+RUN cargo install cargo-leptos -y
 
-# Install cargo-leptos
-RUN cargo binstall cargo-leptos -y
-
-# Add the WASM target
+# Add WASM target for build
 RUN rustup target add wasm32-unknown-unknown
 
 # Make an /app dir, which everything will eventually live in
@@ -18,26 +11,4 @@ WORKDIR /app
 COPY . .
 
 # Build the app
-RUN cargo leptos build -Zbuild-std --release -vv
-
-FROM rust:1.74-bullseye as runner
-
-# -- NB: update binary name from "leptos_start" to match your app name in Cargo.toml --
-# Copy the server binary to the /app directory
-COPY --from=builder /app/target/release/lynixca-rs /app/
-
-# /target/site contains our JS/WASM/CSS, etc.
-COPY --from=builder /app/target/site /app/site
-# Copy Cargo.toml if it’s needed at runtime
-COPY --from=builder /app/Cargo.toml /app/
-WORKDIR /app
-
-# Set any required env variables and
-ENV RUST_LOG="info"
-ENV LEPTOS_SITE_ADDR="0.0.0.0:8080"
-ENV LEPTOS_SITE_ROOT="site"
-EXPOSE 8080
-
-# -- NB: update binary name from "leptos_start" to match your app name in Cargo.toml --
-# Run the server
-CMD ["/app/lynixca-rs"]
+RUN cargo leptos build --release -vv
