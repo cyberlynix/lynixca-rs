@@ -18,7 +18,7 @@ WORKDIR /app
 COPY . .
 
 # Build the app
-RUN cargo leptos build --release -vv
+RUN cargo leptos build -Zbuild-std --release -vv
 
 FROM rust:1.74-bullseye as runner
 
